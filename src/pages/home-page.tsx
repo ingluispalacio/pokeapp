@@ -90,7 +90,7 @@ export function HomePage() {
           <div className="flex gap-2 space-y-2 items-center lg:gap-4 lg:space-y-0">
             
 
-            <img src="/src/assets/pokemon-1.png" alt="Pokeball" className='w-40' />
+            <img src="/assets/pokemon-1.png" alt="Pokeball" className='w-40' />
             <div>
 
             <h1
