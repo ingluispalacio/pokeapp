@@ -22,6 +22,10 @@ export function AppFooter() {
         <p>
           Built with React, Tailwind and TanStack Query
         </p>
+
+        <p className="font-medium text-gray-700">
+          Developed by Ing. Luis Palacio
+        </p>
       </div>
     </footer>
   )
