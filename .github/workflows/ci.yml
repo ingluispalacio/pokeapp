@@ -1,6 +1,5 @@
 name: CI (Pruebas Automatizadas)
 
-# Ejecutar esto cada vez que se suba código a main o se abra un Pull Request
 on:
   push:
     branches: [ main ]
@@ -18,11 +17,11 @@ jobs:
     - name: Configurar Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 20 # Cambia a tu versión de Node si es necesario
-        cache: 'npm'
+        node-version: '22.12'
+        cache: 'pnpm' 
 
     - name: Instalar dependencias
-      run: npm install
+      run: pnpm install
 
     - name: Correr los tests
-      run: npm test # Tu comando de pruebas (ej. Jest, Vitest, etc.)
+      run: pnpm test # 
