@@ -1,5 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, it, expect, beforeEach } from 'vitest';
 import { vi } from 'vitest'
+import type { UseQueryResult } from '@tanstack/react-query'
+import type { Pokemon } from '@/types/pokemon'
 
 const mockNavigate = vi.fn()
 
@@ -20,7 +23,6 @@ vi.mock('react-router-dom', async () => {
 import { PokemonDetailsPage } from '@/pages/pokemon-details-page'
 import { usePokemonDetail } from '@/hooks/use-pokemon-detail'
 
-
 const mockedUsePokemonDetail = vi.mocked(usePokemonDetail)
 
 describe('PokemonDetailsPage', () => {
@@ -29,11 +31,13 @@ describe('PokemonDetailsPage', () => {
   })
 
   it('renders a loading state while pokemon is loading', () => {
+    // Aplicamos la buena práctica usando 'unknown' como puente intermedio de tipos
     mockedUsePokemonDetail.mockReturnValue({
       data: undefined,
       isLoading: true,
       isError: false,
-    })
+      isPending: true,
+    } as unknown as UseQueryResult<Pokemon, Error>)
 
     render(<PokemonDetailsPage />)
 
@@ -45,7 +49,8 @@ describe('PokemonDetailsPage', () => {
       data: undefined,
       isLoading: false,
       isError: true,
-    })
+      isPending: false,
+    } as unknown as UseQueryResult<Pokemon, Error>)
 
     render(<PokemonDetailsPage />)
 
@@ -77,7 +82,8 @@ describe('PokemonDetailsPage', () => {
       },
       isLoading: false,
       isError: false,
-    })
+      isPending: false,
+    } as unknown as UseQueryResult<Pokemon, Error>)
 
     render(<PokemonDetailsPage />)
 

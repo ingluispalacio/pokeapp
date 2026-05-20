@@ -1,6 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+
+import type { UseQueryResult } from '@tanstack/react-query'
+import type { Pokemon } from '@/types/pokemon'
 
 import { HomePage } from '@/pages/home-page'
 import { useAllPokemons } from '@/hooks/use-all-pokemons'
@@ -15,7 +19,8 @@ const mockedUsePokemons = vi.mocked(usePokemons)
 const mockedUseAllPokemons = vi.mocked(useAllPokemons)
 const mockedUseDebounce = vi.mocked(useDebounce)
 
-const samplePokemons = [
+// samplePokemons ahora cumple perfectamente con el tipo Pokemon[]
+const samplePokemons: Pokemon[] = [
   {
     id: 1,
     name: 'bulbasaur',
@@ -60,18 +65,29 @@ const samplePokemons = [
   },
 ]
 
+// Definimos la estructura exacta que retorna tu hook de paginación
+interface PokemonsResponse {
+  total: number
+  pokemons: Pokemon[]
+}
+
 describe('HomePage', () => {
   beforeEach(() => {
     mockedUseDebounce.mockReturnValue('')
+    
     mockedUsePokemons.mockReturnValue({
       data: { total: samplePokemons.length, pokemons: samplePokemons },
       isLoading: false,
       isError: false,
-    })
+      isPending: false,
+    } as unknown as UseQueryResult<PokemonsResponse, Error>)
+
     mockedUseAllPokemons.mockReturnValue({
       data: [],
       isLoading: false,
-    })
+      isError: false,
+      isPending: false,
+    } as unknown as UseQueryResult<Pokemon[], Error>)
   })
 
   it('renders the pokédex and list of pokémons', () => {
@@ -103,7 +119,13 @@ describe('HomePage', () => {
 
   it('shows no results when search returns none', () => {
     mockedUseDebounce.mockReturnValue('missing')
-    mockedUseAllPokemons.mockReturnValue({ data: [], isLoading: false })
+    
+    mockedUseAllPokemons.mockReturnValue({ 
+      data: [], 
+      isLoading: false,
+      isError: false,
+      isPending: false,
+    } as unknown as UseQueryResult<Pokemon[], Error>)
 
     render(
       <MemoryRouter>
@@ -120,7 +142,8 @@ describe('HomePage', () => {
       data: undefined,
       isLoading: false,
       isError: true,
-    })
+      isPending: false,
+    } as unknown as UseQueryResult<PokemonsResponse, Error>)
 
     render(
       <MemoryRouter>
